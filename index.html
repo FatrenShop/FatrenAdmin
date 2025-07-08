@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fatren Shop [لوحة التحكم]</title>
+<link rel="icon" href="https://archive.org/download/514318937-17843527140525669-3229402491492111273-n/514318937_17843527140525669_3229402491492111273_n.jpg" type="image/jpeg">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    :root {
+        --primary-green: #4caf50;
+        --secondary-olive: #8bc34a;
+        --dark-green: #388e3c;
+        --light-green: #dcedc8;
+        --text-dark: #212121;
+        --text-light: #fff;
+        --bg-light: #f8f9fa;
+        --card-bg: #fff;
+        --border-color: #e0e0e0;
+        --shadow-light: rgba(0, 0, 0, 0.1);
+        --success-color: #28a745;
+        --error-color: #dc3545;
+        --info-color: #17a2b8;
+        --warning-color: #ffc107;
+        --border-radius-soft: 8px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Cairo', sans-serif;
+        direction: rtl;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header-admin {
+        background-color: var(--dark-green);
+        color: var(--text-light);
+        padding: 20px 0;
+        text-align: center;
+        box-shadow: 0 2px 5px var(--shadow-light);
+        position: relative;
+    }
+
+    .header-admin h1 {
+        font-family: 'Tajawal', sans-serif;
+        font-weight: 700;
+        font-size: 2.2em;
+        margin: 0;
+    }
+
+    .header-admin .logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        vertical-align: middle;
+        margin-left: 10px;
+        border: 2px solid var(--light-green);
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 20px auto;
+        flex-grow: 1;
+    }
+
+    .admin-dashboard {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .dashboard-section {
+        background-color: var(--card-bg);
+        padding: 30px;
+        border-radius: var(--border-radius-soft);
+        box-shadow: 0 4px 15px var(--shadow-light);
+    }
+
+    .dashboard-section h2 {
+        color: var(--primary-green);
+        font-size: 2em;
+        margin-bottom: 25px;
+        border-bottom: 2px solid var(--secondary-olive);
+        padding-bottom: 10px;
+    }
+
+    #product-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    #product-form input[type="text"],
+    #product-form input[type="number"],
+    #product-form input[type="url"],
+    #product-form textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-soft);
+        font-size: 1em;
+        font-family: 'Cairo', sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        text-align: right;
+    }
+
+    #product-form input:focus,
+    #product-form textarea:focus {
+        outline: 0;
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+    }
+
+    #product-form button {
+        background-color: var(--dark-green);
+        color: var(--text-light);
+        border: 0;
+        padding: 12px 20px;
+        border-radius: var(--border-radius-soft);
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: 700;
+        transition: background-color .3s ease;
+    }
+
+    #product-form button:hover {
+        background-color: #2e7d32;
+    }
+
+    #product-list-admin {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+    }
+
+    #product-list-admin th,
+    #product-list-admin td {
+        border: 1px solid var(--border-color);
+        padding: 12px;
+        text-align: right;
+    }
+
+    #product-list-admin th {
+        background-color: var(--secondary-olive);
+        color: var(--text-light);
+        font-weight: 700;
+        font-size: 1.1em;
+    }
+
+    #product-list-admin tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    #product-list-admin tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .action-buttons button {
+        background: 0;
+        border: 0;
+        cursor: pointer;
+        font-size: 1.2em;
+        margin-right: 10px;
+        transition: color .3s ease;
+    }
+
+    .action-buttons .edit-btn {
+        color: var(--info-color);
+    }
+
+    .action-buttons .edit-btn:hover {
+        color: #0d6efd;
+    }
+
+    .action-buttons .delete-btn {
+        color: var(--error-color);
+    }
+
+    .action-buttons .delete-btn:hover {
+        color: #c82333;
+    }
+
+    #status-message {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: var(--border-radius-soft);
+        font-weight: 700;
+        text-align: center;
+        display: none;
+    }
+
+    .status-success {
+        background-color: var(--success-color);
+        color: var(--text-light);
+    }
+
+    .status-error {
+        background-color: var(--error-color);
+        color: var(--text-light);
+    }
+
+    .status-info {
+        background-color: var(--info-color);
+        color: var(--text-light);
+    }
+
+    .status-warning {
+        background-color: var(--warning-color);
+        color: var(--text-dark);
+    }
+
+    #orders-list {
+        margin-top: 25px;
+    }
+
+    .order-item {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-soft);
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        opacity: 1;
+        transition: opacity .5s ease-in;
+        position: relative;
+    }
+
+    .order-item.new-order {
+        animation: fadeIn .5s ease-out;
+        border-left: 5px solid var(--primary-green);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .order-item strong {
+        color: var(--dark-green);
+    }
+
+    .order-item ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+    }
+
+    .order-item ul li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        background-color: var(--bg-light);
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #eee;
+    }
+
+    .order-item ul li img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-left: 10px;
+        border: 1px solid var(--border-color);
+    }
+    
+    .order-item ul li span {
+        flex-grow: 1;
+        font-size: 0.95em; /* Adjusted for better readability */
+    }
+
+    .order-actions {
+        margin-top: 15px;
+        text-align: left;
+    }
+
+    .order-actions .delete-order-btn {
+        background-color: var(--error-color);
+        color: var(--text-light);
+        border: 0;
+        padding: 8px 12px;
+        border-radius: var(--border-radius-soft);
+        cursor: pointer;
+        font-size: .9em;
+        transition: background-color .3s ease;
+    }
+
+    .order-actions .delete-order-btn:hover {
+        background-color: #c82333;
+    }
+
+    #delete-all-orders-btn {
+        background-color: var(--error-color);
+        color: var(--text-light);
+        border: 0;
+        padding: 10px 15px;
+        border-radius: var(--border-radius-soft);
+        cursor: pointer;
+        font-size: 1em;
+        margin-bottom: 15px;
+        display: block;
+        width: fit-content;
+        margin-right: auto;
+        margin-left: 0;
+    }
+
+    #delete-all-orders-btn:hover {
+        background-color: #c82333;
+    }
+
+    footer {
+        background-color: var(--dark-green);
+        color: var(--text-light);
+        text-align: center;
+        padding: 20px 0;
+        margin-top: 50px;
+        box-shadow: 0 -2px 5px var(--shadow-light);
+    }
+
+    @media (min-width: 768px) {
+        .admin-dashboard {
+            grid-template-columns: 2fr 1fr;
+        }
+        .dashboard-section.orders {
+            grid-column: 1 / -1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            width: 95%;
+        }
+        .dashboard-section {
+            padding: 20px;
+        }
+        .dashboard-section h2 {
+            font-size: 1.8em;
+        }
+        #product-list-admin th,
+        #product-list-admin td {
+            padding: 8px;
+            font-size: .9em;
+        }
+        .action-buttons button {
+            font-size: 1em;
+            margin-right: 5px;
+        }
+        .order-item ul li img {
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-admin h1 {
+            font-size: 1.8em;
+        }
+        .header-admin .logo {
+            width: 40px;
+            height: 40px;
+        }
+        .dashboard-section {
+            padding: 15px;
+        }
+        .dashboard-section h2 {
+            font-size: 1.5em;
+        }
+        #product-list-admin th,
+        #product-list-admin td {
+            padding: 6px;
+            font-size: .8em;
+        }
+        .order-item {
+            padding: 10px;
+        }
+        .order-item p, .order-item ul {
+            font-size: .9em;
+        }
+        .order-actions .delete-order-btn,
+        #delete-all-orders-btn {
+            font-size: .85em;
+            padding: 6px 10px;
+        }
+    }
+</style>
+</head>
+<body>
+<header class="header-admin">
+    <div class="container">
+        <h1><img src="https://archive.org/download/514318937-17843527140525669-3229402491492111273-n/514318937_17843527140525669_3229402491492111273_n.jpg" alt="Fatren Shop Logo" class="logo"> لوحة تحكم Fatren Shop</h1>
+    </div>
+</header>
+
+<main class="container">
+    <div class="admin-dashboard">
+        <section class="dashboard-section products">
+            <h2>إدارة المنتجات</h2>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                <input type="text" id="product-name" placeholder="اسم المنتج" required>
+                <textarea id="product-description" placeholder="وصف المنتج" rows="3"></textarea>
+                <input type="number" id="product-price" placeholder="السعر (د.أ)" step="0.01" required>
+                <input type="url" id="product-image" placeholder="رابط صورة المنتج (URL)">
+                <button type="submit" id="save-product-btn"><i class="fas fa-plus-circle"></i> إضافة منتج جديد</button>
+            </form>
+            <div id="status-message"></div>
+
+            <h3>المنتجات الحالية</h3>
+            <table id="product-list-admin">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>الاسم</th>
+                        <th>السعر</th>
+                        <th>الصورة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="5">جاري تحميل المنتجات...</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="dashboard-section orders">
+            <h2>إدارة الطلبات</h2>
+            <button id="delete-all-orders-btn"><i class="fas fa-trash-alt"></i> حذف جميع الطلبات</button>
+            <div id="orders-list">
+                <p>جاري تحميل الطلبات...</p>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2025 Fatren Shop Admin. جميع الحقوق محفوظة.</p>
+    </div>
+</footer>
+
+<script>
+    // **هام: استبدل YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL بالرابط الفعلي لتطبيق الويب الخاص بك.**
+    const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw0HlD0VQxEAiIAegXYzW2W-yJx1t_x07jYYISJtPJuoMh4_r0Wo90Fk0_Q1l18mgWX5A/exec';
+    let displayedOrderIds = new Set();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const productForm = document.getElementById('product-form');
+        const productIdInput = document.getElementById('product-id');
+        const productNameInput = document.getElementById('product-name');
+        const productDescriptionInput = document.getElementById('product-description');
+        const productPriceInput = document.getElementById('product-price');
+        const productImageInput = document.getElementById('product-image');
+        const saveProductBtn = document.getElementById('save-product-btn');
+        const productListAdmin = document.getElementById('product-list-admin').getElementsByTagName('tbody')[0];
+        const ordersListDiv = document.getElementById('orders-list');
+        const statusMessage = document.getElementById('status-message');
+        const deleteAllOrdersBtn = document.getElementById('delete-all-orders-btn');
+
+        function displayStatusMessage(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = '';
+            statusMessage.classList.add('status-' + type);
+            statusMessage.style.display = 'block';
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 4000);
+        }
+
+        // --- وظائف إدارة المنتجات (لا تغيير) ---
+        async function fetchProducts() {
+            productListAdmin.innerHTML = '<tr><td colspan="5">جاري تحميل المنتجات...</td></tr>';
+            try {
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_WEB_APP_URL}?action=getProducts`);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}. Details: ${errorText}`);
+                }
+                const products = await response.json();
+                renderProductsAdmin(products);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                displayStatusMessage(`فشل تحميل المنتجات: ${error.message}`, 'error');
+                productListAdmin.innerHTML = '<tr><td colspan="5" style="color: var(--error-color);">فشل تحميل المنتجات. الرجاء المحاولة لاحقاً.</td></tr>';
+            }
+        }
+
+        function renderProductsAdmin(products) {
+            productListAdmin.innerHTML = '';
+            if (products.length === 0) {
+                productListAdmin.innerHTML = '<tr><td colspan="5">لا توجد منتجات حالياً.</td></tr>';
+                return;
+            }
+            products.forEach(product => {
+                const row = productListAdmin.insertRow();
+                row.innerHTML = `
+                    <td>${product.ID}</td>
+                    <td>${product.Name}</td>
+                    <td>${parseFloat(product.Price).toFixed(2)} د.أ</td>
+                    <td><img src="${product.ImageURL || 'https://via.placeholder.com/50x50?text=No+Img'}" alt="${product.Name}" width="50" height="50" style="object-fit: cover; border-radius: 4px;"></td>
+                    <td class="action-buttons">
+                        <button class="edit-btn" data-id="${product.ID}" data-name="${product.Name}" data-desc="${product.Description}" data-price="${product.Price}" data-image="${product.ImageURL}">
+                            <i class="fas fa-edit"></i> تعديل
+                        </button>
+                        <button class="delete-btn" data-id="${product.ID}">
+                            <i class="fas fa-trash-alt"></i> حذف
+                        </button>
+                    </td>
+                `;
+            });
+        }
+
+        productForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const product = {
+                ID: productIdInput.value,
+                Name: productNameInput.value,
+                Description: productDescriptionInput.value,
+                Price: parseFloat(productPriceInput.value),
+                ImageURL: productImageInput.value
+            };
+            let actionType;
+            if (product.ID) {
+                actionType = 'updateProduct';
+                displayStatusMessage('جاري تحديث المنتج...', 'info');
+            } else {
+                actionType = 'addProduct';
+                displayStatusMessage('جاري إضافة المنتج...', 'info');
+            }
+
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: actionType,
+                        data: JSON.stringify(product)
+                    }).toString(),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}. Details: ${errorText}`);
+                }
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    displayStatusMessage(result.message, 'success');
+                    productForm.reset();
+                    productIdInput.value = '';
+                    saveProductBtn.innerHTML = '<i class="fas fa-plus-circle"></i> إضافة منتج جديد';
+                    fetchProducts();
+                } else {
+                    displayStatusMessage(`فشل العملية: ${result.message || 'خطأ غير معروف'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error submitting product form:', error);
+                displayStatusMessage(`حدث خطأ أثناء حفظ المنتج: ${error.message}. الرجاء المحاولة مرة أخرى.`, 'error');
+            }
+        });
+
+        productListAdmin.addEventListener('click', async (event) => {
+            if (event.target.classList.contains('edit-btn') || event.target.closest('.edit-btn')) {
+                const button = event.target.closest('.edit-btn');
+                productIdInput.value = button.dataset.id;
+                productNameInput.value = button.dataset.name;
+                productDescriptionInput.value = button.dataset.desc;
+                productPriceInput.value = button.dataset.price;
+                productImageInput.value = button.dataset.image;
+                saveProductBtn.innerHTML = '<i class="fas fa-save"></i> حفظ التعديلات';
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            } else if (event.target.classList.contains('delete-btn') || event.target.closest('.delete-btn')) {
+                const button = event.target.closest('.delete-btn');
+                const productId = button.dataset.id;
+                if (confirm(`هل أنت متأكد من حذف المنتج رقم ${productId}؟`)) {
+                    displayStatusMessage(`جاري حذف المنتج: ${productId}...`, 'info');
+                    try {
+                        const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({
+                                action: 'deleteProduct',
+                                id: productId
+                            }).toString(),
+                        });
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(`HTTP error! status: ${response.status}. Details: ${errorText}`);
+                        }
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            displayStatusMessage('تم حذف المنتج بنجاح!', 'success');
+                            fetchProducts();
+                        } else {
+                            displayStatusMessage(`فشل حذف المنتج: ${result.message || 'خطأ غير معروف'}`, 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error deleting product:', error);
+                        displayStatusMessage(`حدث خطأ أثناء حذف المنتج: ${error.message}. الرجاء المحاولة مرة أخرى.`, 'error');
+                    }
+                }
+            }
+        });
+
+        // --- وظائف إدارة الطلبات (تم التعديل الرئيسي هنا) ---
+        async function fetchOrders() {
+            if (ordersListDiv.innerHTML.trim() === '<p>جاري تحميل الطلبات...</p>' || ordersListDiv.innerHTML.trim() === '' || ordersListDiv.children.length === 0) {
+                ordersListDiv.innerHTML = '<p>جاري تحميل الطلبات...</p>';
+            }
+            
+            displayStatusMessage('جاري تحميل الطلبات...', 'info');
+
+            try {
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_WEB_APP_URL}?action=getOrders`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! Status: ${response.status}. Response details: ${errorText || 'No specific error message.'}`);
+                }
+
+                const orders = await response.json();
+                renderOrdersIncrementally(orders);
+                displayStatusMessage('تم تحميل الطلبات بنجاح.', 'success');
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                ordersListDiv.innerHTML = '<p style="color: var(--error-color);">فشل تحميل الطلبات. الرجاء المحاولة لاحقاً أو التحقق من رابط Google Apps Script.</p>';
+                displayStatusMessage(`❌ فشل تحميل الطلبات: ${error.message}. الرجاء المحاولة لاحقاً.`, 'error');
+            }
+        }
+
+        function renderOrdersIncrementally(newlyFetchedOrders) {
+            const loadingMessage = ordersListDiv.querySelector('p');
+            if (loadingMessage && (loadingMessage.textContent.includes('جاري تحميل الطلبات') || loadingMessage.textContent.includes('لا توجد طلبات'))) {
+                ordersListDiv.innerHTML = '';
+            }
+
+            if (newlyFetchedOrders.length === 0) {
+                if (displayedOrderIds.size === 0) {
+                    ordersListDiv.innerHTML = '<p>لا توجد طلبات حالياً.</p>';
+                }
+                return;
+            }
+
+            let newOrdersFound = false;
+            let currentFetchedIds = new Set(newlyFetchedOrders.map(order => order.ID));
+
+            // إزالة الطلبات التي لم تعد موجودة في البيانات الجديدة
+            Array.from(displayedOrderIds).forEach(id => {
+                if (!currentFetchedIds.has(id)) {
+                    const orderElementToRemove = ordersListDiv.querySelector(`[data-order-id="${id}"]`);
+                    if (orderElementToRemove) {
+                        orderElementToRemove.remove();
+                        displayedOrderIds.delete(id);
+                    }
+                }
+            });
+
+            for (const order of newlyFetchedOrders) {
+                if (!displayedOrderIds.has(order.ID)) {
+                    const orderDiv = document.createElement('div');
+                    orderDiv.classList.add('order-item');
+                    orderDiv.setAttribute('data-order-id', order.ID);
+                    orderDiv.classList.add('new-order');
+                    setTimeout(() => {
+                        orderDiv.classList.remove('new-order');
+                    }, 1000);
+
+                    // بناء قائمة المنتجات مع الصور والكميات والأسعار الفردية/الإجمالية
+                    let itemsHtml = '';
+                    if (Array.isArray(order.Items)) {
+                        itemsHtml = order.Items.map(item => `
+                            <li>
+                                <img src="${item.image || 'https://via.placeholder.com/40x40?text=No+Img'}" alt="${item.name}">
+                                <span>
+                                    ${item.name} <br>
+                                    الكمية: ${item.quantity} <br>
+                                    السعر للقطعة: ${parseFloat(item.price).toFixed(2)} د.أ <br>
+                                    السعر الإجمالي للكمية: ${parseFloat(item.price * item.quantity).toFixed(2)} د.أ
+                                </span>
+                            </li>
+                        `).join('');
+                    } else if (typeof order.Items === 'string') {
+                        try {
+                            const parsedItems = JSON.parse(order.Items);
+                            itemsHtml = parsedItems.map(item => `
+                                <li>
+                                    <img src="${item.image || 'https://via.placeholder.com/40x40?text=No+Img'}" alt="${item.name}">
+                                    <span>
+                                        ${item.name} <br>
+                                        الكمية: ${item.quantity} <br>
+                                        السعر للقطعة: ${parseFloat(item.price).toFixed(2)} د.أ <br>
+                                        السعر الإجمالي للكمية: ${parseFloat(item.price * item.quantity).toFixed(2)} د.أ
+                                    </span>
+                                </li>
+                            `).join('');
+                        } catch (e) {
+                            itemsHtml = `<li>${order.Items}</li>`;
+                            console.warn("Failed to parse order items as JSON:", order.Items, e);
+                        }
+                    } else {
+                        itemsHtml = `<li>${order.Items}</li>`;
+                    }
+                    
+                    const orderDate = new Date(order.Timestamp);
+                    const formattedDate = orderDate.toLocaleString('ar-AE', { 
+                        year: 'numeric', 
+                        month: 'numeric', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true
+                    }).replace('ص', 'صباحاً').replace('م', 'مساءً');
+
+
+                    orderDiv.innerHTML = `
+                        <p><strong>الطلب رقم:</strong> ${order.ID}</p>
+                        <p><strong>التاريخ:</strong> ${formattedDate}</p>
+                        <p><strong>اسم العميل:</strong> ${order.CustomerName}</p>
+                        <p><strong>رقم الهاتف:</strong> ${order.CustomerPhone}</p>
+                        <p><strong>العنوان:</strong> ${order.CustomerAddress}</p>
+                        <p><strong>الملاحظات:</strong> ${order.CustomerNotes || 'لا يوجد'}</p>
+                        <p><strong>السعر الإجمالي للطلب:</strong> ${parseFloat(order.TotalAmount).toFixed(2)} د.أ</p>
+                        <p><strong>المنتجات المطلوبة:</strong></p>
+                        <ul>${itemsHtml}</ul>
+                        <div class="order-actions">
+                            <button class="delete-order-btn" data-id="${order.ID}"><i class="fas fa-trash-alt"></i> حذف الطلب</button>
+                        </div>
+                    `;
+                    ordersListDiv.prepend(orderDiv);
+                    displayedOrderIds.add(order.ID);
+                    newOrdersFound = true;
+                }
+            }
+
+            if (newOrdersFound) {
+                displayStatusMessage('تم استلام طلبات جديدة!', 'info');
+            }
+            
+            if (ordersListDiv.children.length === 0 && newlyFetchedOrders.length === 0) {
+                ordersListDiv.innerHTML = '<p>لا توجد طلبات حالياً.</p>';
+                displayedOrderIds.clear();
+            }
+        }
+
+        async function deleteOrder(orderId) {
+            if (!confirm(`هل أنت متأكد من حذف الطلب رقم ${orderId}؟`)) {
+                return;
+            }
+            displayStatusMessage(`جاري حذف الطلب: ${orderId}...`, 'info');
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'deleteOrder',
+                        id: orderId
+                    }).toString(),
+                });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}. Details: ${errorText}`);
+                }
+                const result = await response.json();
+                if (result.status === 'success') {
+                    displayStatusMessage('تم حذف الطلب بنجاح!', 'success');
+                    fetchOrders();
+                } else {
+                    displayStatusMessage(`فشل حذف الطلب: ${result.message || 'خطأ غير معروف'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting order:', error);
+                displayStatusMessage(`حدث خطأ أثناء حذف الطلب: ${error.message}. الرجاء المحاولة مرة أخرى.`, 'error');
+            }
+        }
+
+        async function deleteAllOrders() {
+            if (!confirm('هل أنت متأكد تماماً من حذف جميع الطلبات؟ هذا الإجراء لا يمكن التراجع عنه!')) {
+                return;
+            }
+            displayStatusMessage('جاري حذف جميع الطلبات...', 'warning');
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'deleteAllOrders'
+                    }).toString(),
+                });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}. Details: ${errorText}`);
+                }
+                const result = await response.json();
+                if (result.status === 'success') {
+                    displayStatusMessage('تم حذف جميع الطلبات بنجاح!', 'success');
+                    displayedOrderIds.clear();
+                    ordersListDiv.innerHTML = '<p>لا توجد طلبات حالياً.</p>';
+                } else {
+                    displayStatusMessage(`فشل حذف جميع الطلبات: ${result.message || 'خطأ غير معروف'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting all orders:', error);
+                displayStatusMessage(`حدث خطأ أثناء حذف جميع الطلبات: ${error.message}. الرجاء المحاولة مرة أخرى.`, 'error');
+            }
+        }
+
+        fetchProducts();
+        fetchOrders();
+        setInterval(fetchOrders, 10000);
+
+        ordersListDiv.addEventListener('click', (event) => {
+            if (event.target.classList.contains('delete-order-btn') || event.target.closest('.delete-order-btn')) {
+                const button = event.target.closest('.delete-order-btn');
+                const orderId = button.dataset.id;
+                deleteOrder(orderId);
+            }
+        });
+
+        deleteAllOrdersBtn.addEventListener('click', deleteAllOrders);
+    });
+</script>
+</body>
+</html>
